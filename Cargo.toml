@@ -1,0 +1,25 @@
+[package]
+name = "crabkvs"
+version = "0.1.0"
+edition = "2021"
+authors = ["jeffreylean"]
+description = "A key-value store"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "crabkvs"
+test = false
+
+[lib]
+doctest = false
+test = false
+
+
+[dependencies]
+clap = {version = "4.3.21",features = ["derive"]}
+
+[dev-dependencies]
+assert_cmd = "0.11.0"
+predicates = "1.0.0"
+
