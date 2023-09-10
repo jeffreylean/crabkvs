@@ -14,6 +14,7 @@ pub mod error;
 // Maximum size of a log file should be 2kb
 const MAX_SIZE: u64 = 4096;
 
+// Set the compaction threshold to 50 kb
 const COMPACTION_THRESHOLD: u64 = 50 * 1024;
 
 /// This is a type that contain hashmap which is used as a memory storage
