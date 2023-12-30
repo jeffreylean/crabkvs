@@ -62,13 +62,14 @@ impl KvStore {
         let log_file_dir: PathBuf = path.into();
         // Get list of log files numbers
         let list = sorted_split_list(&log_file_dir)?;
-        let index = if list.is_empty() {
-            0
-        } else {
-            *list.last().unwrap()
-        };
-        let log_file_path = log_file_dir.join(format!("{}.log", index));
 
+        let index = if !list.is_empty() {
+            *list.last().expect("Should have at least 1 log file")
+        } else {
+            0
+        };
+
+        let log_file_path = log_file_dir.join(format!("{}.log", index));
         let write_file = OpenOptions::new()
             .create(true)
             .append(true)
@@ -84,6 +85,7 @@ impl KvStore {
             path: log_file_dir.clone(),
         };
 
+        // Load the logs into memory
         for split in list.iter() {
             let mut buf = String::new();
             let file = &log_file_dir.join(format!("{}.log", split));
@@ -103,12 +105,13 @@ impl KvStore {
                         kvs.total_log_size += buf.as_bytes().len() as u64;
                     }
                     Command::Remove { key, .. } => {
-                        let _ = kvs.keydir.remove(&key);
+                        kvs.keydir.remove(&key);
                     }
                     // Not sure why here i am forced to return Option<u16>, which is the return type of
                     // previous 2 enum.
                     // Does the return type have to be the same for all enum ???
-                    Command::Get { .. } => (),
+                    // Turn out yes. Enum should have the same type.
+                    _ => (),
                 };
 
                 offset = reader.stream_position()?;
